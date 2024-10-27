@@ -1,0 +1,15 @@
+root = "."
+
+[build]
+  cmd = "go build -o tmp/main ./cmd/web"
+  bin = "tmp/main"
+  watcher = ["cmd", "pkg", "config"]
+
+[watch]
+  ignore = ["tmp", "bin"]
+  extensions = ["go"]
+
+# Автозапуск при изменении
+[log]
+  color = true
+  timestamp = true

@@ -1,0 +1,30 @@
+# Stage 1: Build
+FROM golang:1.23 AS builder
+
+WORKDIR /app
+
+# Установим air для автоматической пересборки
+RUN go install github.com/air-verse/air@latest
+
+# Копируем файлы проекта
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Копируем все файлы проекта в рабочий каталог
+COPY . .
+
+# Проверяем, что файлы скопированы
+RUN ls -la /app/cmd/web
+
+# Stage 2: Runtime
+FROM golang:1.23
+
+WORKDIR /app
+
+# Копируем приложение из builder'а
+COPY --from=builder /app /app
+
+# Устанавливаем air для пересборки
+RUN go install github.com/air-verse/air@latest
+
+CMD ["air"]
